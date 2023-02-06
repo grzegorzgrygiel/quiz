@@ -1,0 +1,64 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</head>
+
+<body>
+    <h1>Start your Quiz!</h1>
+
+    <div><label for="number">How many questions?:</label>
+        <select id="number" name="number">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+    <br>
+    <div>
+        <label for="topic">Select topic:</label>
+        <select name="topic" id="topic">
+            <option value="9">General knowledge</option>
+            <option value="17">Science&Nature</option>
+            <option value="18">Science: computers</option>
+            <option value="22">Geography</option>
+            <option value="28">Vehicles</option>
+        </select>
+    </div>
+    <br>
+    <div>
+        <label for="level">Select level:</label>
+        <select name="level" id="level">
+            <option value="">Any difficulty</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+    </div>
+    <br>
+    <div>
+        <label for="level">Select type:</label>
+        <select name="type" id="type">
+            <option value="">Any type</option>
+            <option value="multiple">Multiple Choice</option>
+            <option value="boolean">True / False</option>
+        </select>
+    </div>
+    <br>
+    <button id="newQuiz">Start quiz</button>
+    <br>
+    <br>
+    <button id="newQuestion">Next</button>
+    <br>
+    <div id=quizQuestion></div>
+
+    <script src="app.js"></script>
+
+</html>
