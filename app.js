@@ -4,14 +4,11 @@ const level = document.querySelector("#level");
 const type = document.querySelector("#type");
 const newQuiz = document.querySelector("#newQuiz");
 const nextQuestion = document.querySelector("#newQuestion");
-const questionContainer = document.querySelector("#quizQuestion");
-
-let id = 0;
+const questionContainer = document.querySelector("#quizContainer");
 
 // dobrą praktyką jest stworzenie ogólnej funkcji do api
 // oraz wrzucenie URL api w stałej
-// tworzenie prostych funkcji pomaga w opanowaniu skomplikowanego kodu i naprawę bugów w jednym miejscu
-
+let id = 0;
 let questions = [];
 let answers = {};
 let score = 0;
@@ -28,7 +25,7 @@ async function getData(url, params) {
 async function getQuestions() {
   try {
     const params = {
-      amount: 10,
+      amount: number.value,
       category: topic.value,
       difficulty: level.value,
       type: type.value,
@@ -68,8 +65,8 @@ function renderRadio(id, answer) {
 
 function addNewQuestion(id, questionData) {
   const newQuestionTitle = document.createElement("P");
-  //newQuestionTitle.append(`Q${id + 1}. `); // nie wyświetlają się numery pytań, nadpisuje title
-  newQuestionTitle.innerHTML = `Q${id + 1}. ${questionData.question}`; // innerHTML tworzy html wewnątrz elementu
+  //newQuestionTitle.append(`Q${id + 1}. `); // nadpisuje title
+  newQuestionTitle.innerHTML = `Q${id + 1}. ${questionData.question}`;
   questionContainer.append(newQuestionTitle);
   if (questionData.type === "multiple") {
     renderRadio("A", questionData.correct_answer);
@@ -82,7 +79,6 @@ function addNewQuestion(id, questionData) {
     renderRadio("F", questionData.incorrect_answers[0]);
   }
 }
-// w twojej funkcji też nie wyświetlają się numery pytań
 
 // async function addQuestionSet() {
 //     await saveQuestions();
@@ -95,32 +91,37 @@ function addNewQuestion(id, questionData) {
 function recordAnswer() {
   let correctAnswer = questions[id - 1].correct_answer;
   let answerSelected = "";
-  let options = document.querySelectorAll(".answerOption");
-  answerSelected = Array.from(options).find((radio) => radio.checked).value;
-  if (correctAnswer === answerSelected) {
+  let answerRadio = document.querySelector("input[name=question]:checked");
+
+  answerSelected = answerRadio.value;
+  if (answerSelected === correctAnswer) {
     score++;
   }
-  // sprawdzenie że działa, ale docelowo chciałbym zapisać odpowiedzi w answers
-  // ale na razie nie mam pomysłu
   console.log(`question #${id}`);
   console.log(correctAnswer);
   console.log(answerSelected);
-  console.log(`the score is: ${score}`);
+  console.log(`Your score is: ${score}`);
 }
 
 function removeItem() {
-  let node = document.querySelector("#quizQuestion");
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
+  while (questionContainer.firstChild) {
+    questionContainer.removeChild(questionContainer.firstChild);
   }
 }
 
 function addQuestion() {
-  recordAnswer();
-  removeItem();
-  addNewQuestion(id, questions[id]);
-  id++;
-  // opcja kiedy się skończy lista
+  if (id < questions.length) {
+    recordAnswer();
+    removeItem();
+    addNewQuestion(id, questions[id]);
+    id++;
+  } else if (id === questions.length) {
+    removeItem();
+    const quizScore = document.createElement("P");
+    quizScore.innerHTML = `Your score is ${score} out of ${id}`;
+    questionContainer.append(quizScore);
+  }
+
 }
 
 // newQuiz.addEventListener("click", addQuestionSet);
