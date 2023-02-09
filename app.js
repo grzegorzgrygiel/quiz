@@ -43,6 +43,10 @@ async function saveQuestions() {
   id++;
 }
 
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.6);
+}
+
 function renderRadio(id, answer) {
   let radiobox = document.createElement("input");
   radiobox.classList.add("answerOption");
@@ -68,15 +72,24 @@ function addNewQuestion(id, questionData) {
   //newQuestionTitle.append(`Q${id + 1}. `); // nadpisuje title
   newQuestionTitle.innerHTML = `Q${id + 1}. ${questionData.question}`;
   questionContainer.append(newQuestionTitle);
+  let A = questionData.correct_answer;
+  let B = questionData.incorrect_answers[0];
+  let C = questionData.incorrect_answers[1];
+  let D = questionData.incorrect_answers[2];
+
   if (questionData.type === "multiple") {
-    renderRadio("A", questionData.correct_answer);
-    renderRadio("B", questionData.incorrect_answers[0]);
-    renderRadio("C", questionData.incorrect_answers[1]);
-    renderRadio("D", questionData.incorrect_answers[2]);
+    const fourAnswers = [A, B, C, D];
+    const shuffledOptions = shuffle(fourAnswers);
+    renderRadio("A", shuffledOptions[0]);
+    renderRadio("B", shuffledOptions[1]);
+    renderRadio("C", shuffledOptions[2]);
+    renderRadio("D", shuffledOptions[3]);
     id++;
   } else if (questionData.type === "boolean") {
-    renderRadio("T", questionData.correct_answer);
-    renderRadio("F", questionData.incorrect_answers[0]);
+    const twoAnswers = [A, B];
+    const shuffledOptions = shuffle(twoAnswers);
+    renderRadio("A", shuffledOptions[0]);
+    renderRadio("B", shuffledOptions[1]);
   }
 }
 
@@ -98,8 +111,8 @@ function recordAnswer() {
     score++;
   }
   console.log(`question #${id}`);
-  console.log(correctAnswer);
-  console.log(answerSelected);
+  console.log(`The correct answer is: ${correctAnswer}`);
+  console.log(`You selected: ${answerSelected}`);
   console.log(`Your score is: ${score}`);
 }
 
@@ -116,6 +129,7 @@ function addQuestion() {
     addNewQuestion(id, questions[id]);
     id++;
   } else if (id === questions.length) {
+    recordAnswer();
     removeItem();
     const quizScore = document.createElement("P");
     quizScore.innerHTML = `Your score is ${score} out of ${id}`;
@@ -127,3 +141,8 @@ function addQuestion() {
 // newQuiz.addEventListener("click", addQuestionSet);
 newQuiz.addEventListener("click", saveQuestions);
 nextQuestion.addEventListener("click", addQuestion);
+
+
+
+
+
