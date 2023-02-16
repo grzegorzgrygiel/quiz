@@ -1,3 +1,11 @@
-p {
+.question {
     font-weight: bold;
+}
+.red {
+    color: red;
+    line-height: 0.5;
+}
+.green {
+    color: green;
+    line-height: 0.5
 }

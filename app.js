@@ -5,13 +5,15 @@ const type = document.querySelector("#type");
 const newQuiz = document.querySelector("#newQuiz");
 const nextQuestion = document.querySelector("#newQuestion");
 const questionContainer = document.querySelector("#quizContainer");
+const cancel = document.querySelector("#renew");
+
+let id = 0;
+let questions = [];
+let answers = [];
+let score = 0;
 
 // dobrą praktyką jest stworzenie ogólnej funkcji do api
 // oraz wrzucenie URL api w stałej
-let id = 0;
-let questions = [];
-let answers = {};
-let score = 0;
 
 const API_URL = "https://opentdb.com/api.php?";
 
@@ -41,6 +43,9 @@ async function saveQuestions() {
   questions = await getQuestions();
   addNewQuestion(id, questions[id]);
   id++;
+  newQuiz.disabled = true;
+  renew.disabled = false;
+  nextQuestion.disabled = false;
 }
 
 function shuffle(array) {
@@ -69,7 +74,7 @@ function renderRadio(id, answer) {
 
 function addNewQuestion(id, questionData) {
   const newQuestionTitle = document.createElement("P");
-  //newQuestionTitle.append(`Q${id + 1}. `); // nadpisuje title
+  newQuestionTitle.classList.add("question");
   newQuestionTitle.innerHTML = `Q${id + 1}. ${questionData.question}`;
   questionContainer.append(newQuestionTitle);
   let A = questionData.correct_answer;
@@ -93,15 +98,37 @@ function addNewQuestion(id, questionData) {
   }
 }
 
-// async function addQuestionSet() {
-//     await saveQuestions();
-//     questions.forEach((question) => {
-//         addNewQuestion(id, question);
-//         id++;
-//     });
-// }
+function addAnswer(id, data) {
+  const question = document.createElement("P");
+  question.classList.add("question");
+  const correctAnswer = document.createElement("P");
+  correctAnswer.classList.add("green");
+  const selectedAnswer = document.createElement("P");
+  selectedAnswer.classList.add("red");
+  question.innerHTML = `Q${id+1}. ${data[id].question}`;
+  correctAnswer.innerHTML = `A: ${data[id].correct}`;
+  selectedAnswer.innerHTML = `A: ${data[id].selected}`;
+  let corAns = data[id].correct;
+  let selAns = data[id].selected;
+  if (selAns === corAns) {
+    questionContainer.append(question);
+    questionContainer.append(correctAnswer);
+  } else {
+    questionContainer.append(question);
+    questionContainer.append(correctAnswer);
+    questionContainer.append(selectedAnswer);
+  }
+}
+
+function recordItem(id, question, correct, selected) {
+  this.id = id;
+  this.question = question;
+  this.correct = correct;
+  this.selected = selected;
+}
 
 function recordAnswer() {
+  let question = questions[id - 1].question;
   let correctAnswer = questions[id - 1].correct_answer;
   let answerSelected = "";
   let answerRadio = document.querySelector("input[name=question]:checked");
@@ -110,16 +137,31 @@ function recordAnswer() {
   if (answerSelected === correctAnswer) {
     score++;
   }
+  answers.push(new recordItem(id, question, correctAnswer, answerSelected));
   console.log(`question #${id}`);
   console.log(`The correct answer is: ${correctAnswer}`);
   console.log(`You selected: ${answerSelected}`);
   console.log(`Your score is: ${score}`);
+  console.log(answers);
 }
+
 
 function removeItem() {
   while (questionContainer.firstChild) {
     questionContainer.removeChild(questionContainer.firstChild);
   }
+}
+
+function resetQuiz() {
+  removeItem();
+  id = 0;
+  answers = [];
+  questions = [];
+  score = 0;
+  newQuiz.disabled = false;
+  renew.disabled = true;
+  nextQuestion.disabled = true;
+  console.clear();
 }
 
 function addQuestion() {
@@ -134,15 +176,12 @@ function addQuestion() {
     const quizScore = document.createElement("P");
     quizScore.innerHTML = `Your score is ${score} out of ${id}`;
     questionContainer.append(quizScore);
+    for (let i = 0; i <= questions.length; i++) {
+      addAnswer(i, answers);
+    }
   }
-
 }
 
-// newQuiz.addEventListener("click", addQuestionSet);
 newQuiz.addEventListener("click", saveQuestions);
 nextQuestion.addEventListener("click", addQuestion);
-
-
-
-
-
+renew.addEventListener("click", resetQuiz);
