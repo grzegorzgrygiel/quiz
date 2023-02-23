@@ -1,11 +1,60 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+#wrapper {
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    background-color: #abdbe3;
+}
+
+#settings {
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.setting {
+    font-weight: bold;
+}
+
+#buttons {
+    width: 270px;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#quizContainer {
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
+
+#info {
+    text-align: center;
+    font-weight: bold;
+}
+
 .question {
     font-weight: bold;
 }
 .red {
-    color: red;
+    color: #Ec3c50;
     line-height: 0.5;
 }
 .green {
-    color: green;
+    color: #279424;
     line-height: 0.5
 }
+
