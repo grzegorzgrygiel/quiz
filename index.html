@@ -15,8 +15,9 @@
         <h1>Take A Quiz!</h1>
 
         <div id="settings">
-            <div><label class="setting" for="number">How many questions?:</label>
-                <select id="number" name="number">
+            <div class="setting-wrapper">
+                <label class="setting" for="number">How many questions?:</label>
+                <select id="number" class="selects" name="number">
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
@@ -24,10 +25,9 @@
                     <option value="50">50</option>
                 </select>
             </div>
-            <br>
-            <div>
+            <div class="setting-wrapper">
                 <label class="setting" for="topic">Select topic:</label>
-                <select name="topic" id="topic">
+                <select name="topic" class="selects" id="topic">
                     <option value="9">General knowledge</option>
                     <option value="17">Science&Nature</option>
                     <option value="18">Science: computers</option>
@@ -35,20 +35,18 @@
                     <option value="28">Vehicles</option>
                 </select>
             </div>
-            <br>
-            <div>
+            <div class="setting-wrapper">
                 <label class="setting" for="level">Select level:</label>
-                <select name="level" id="level">
+                <select name="level" class="selects" id="level">
                     <option value="">Any difficulty</option>
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
                     <option value="hard">Hard</option>
                 </select>
             </div>
-            <br>
-            <div>
+            <div class="setting-wrapper">
                 <label class="setting" for="level">Select type:</label>
-                <select name="type" id="type">
+                <select name="type" class="selects" id="type">
                     <option value="">Any type</option>
                     <option value="multiple">Multiple Choice</option>
                     <option value="boolean">True / False</option>
@@ -56,10 +54,10 @@
             </div>
         </div>
         <div id="buttons">
-            <button id="newQuiz">Start quiz</button>
-            <button id="newQuestion">Next</button>
-            <button id="renew">Reset</button>
-            <button id="score">Score</button>
+            <button id="newQuiz" class="btns">Start quiz</button>
+            <button id="newQuestion" class="btns">Next</button>
+            <button id="renew" class="btns">Reset</button>
+            <button id="score" class="btns">Score</button>
         </div>
         <div id=quizContainer></div>
         <p id="info">Your selected answer is recorded after you press NEXT.</p>
@@ -67,4 +65,4 @@
 
     <script src="app.js"></script>
 
-    </html>
+</html>
