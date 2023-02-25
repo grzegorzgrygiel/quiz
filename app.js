@@ -1,24 +1,29 @@
 const settingsDiv = document.querySelector("#settings");
-const number = document.querySelector("#number");
-const topic = document.querySelector("#topic");
-const level = document.querySelector("#level");
-const type = document.querySelector("#type");
-const newQuiz = document.querySelector("#newQuiz");
-const nextQuestion = document.querySelector("#newQuestion");
-const questionContainer = document.querySelector("#quizContainer");
-const cancel = document.querySelector("#renew");
 const showScore = document.querySelector("#score");
-const info = document.querySelector("#info");
 
 let id = 0;
 let questions = [];
 let answers = [];
+let tokenObject = {
+  data: {
+    response_code: '',
+    token: '',
+  },
+};
 let score = 0;
+let code = '';
 
-// dobrą praktyką jest stworzenie ogólnej funkcji do api
-// oraz wrzucenie URL api w stałej
+newQuestion.disabled = true;
+reset.disabled = true;
+showScore.disabled = true;
 
 const API_URL = "https://opentdb.com/api.php?";
+const API_token = 'https://opentdb.com/api_token.php?command=request'
+
+async function getToken(url) {
+  tokenObject = await axios.get(url);
+  return tokenObject;
+}
 
 async function getData(url, params) {
   const res = await axios.get(url, {
@@ -29,33 +34,56 @@ async function getData(url, params) {
 
 // %%%%%%%%% GET QUESTIONS FROM API %%%%%%%%%%%%%
 
+async function generateToken() {
+  tokenObject = await getToken(API_token);
+  console.log(`Your token is: ${tokenObject.data.token}`);
+  codeMSG.style.display = 'inline';
+  codeMSG.innerHTML = '<span class="red">Your token has been generated!</span>';
+}
+
 async function getQuestions() {
   try {
     const params = {
+      token: tokenObject.data.token,
       amount: number.value,
       category: topic.value,
       difficulty: level.value,
       type: type.value,
     };
     const res = await getData(API_URL, params);
-    return res.data.results;
+    return res.data;
   } catch (e) {
     return "NO QUESTIONS AVAILABLE! SORRY :(";
   }
 }
+
 
 // %%%%%%%%%% DISPLAY 1ST QUESTION %%%%%%%%%%%%%%
 
 // function for the START QUIZ button
 
 async function saveQuestions() {
-  questions = await getQuestions();
-  addNewQuestion(id, questions[id]);
-  id++;
-  newQuiz.disabled = true;
-  renew.disabled = false;
-  nextQuestion.disabled = false;
-  settingsDiv.style.display = 'none'
+  let data = await getQuestions();
+  questions = data.results;
+  code = data.response_code;
+  if (data.response_code === 1) {
+    console.log("The API doesn't have enough questions for your query");
+    codeMSG.style.display = 'inline';
+    codeMSG.innerHTML = '<span class="red">You need to select fewer questions!</span>';
+  } else if (data.response_code === 4) {
+    console.log("Session Token has returned all possible questions for the specified query.");
+    codeMSG.style.display = 'inline';
+    codeMSG.innerHTML = '<span class="red">There are no more questions for these settings!</span>';
+  } else if (data.response_code === 0) {
+    codeMSG.style.display = 'none';
+    addNewQuestion(id, questions[id]);
+    id++;
+    newQuiz.disabled = true;
+    reset.disabled = false;
+    newQuestion.disabled = false;
+    token.disabled = true;
+    settingsDiv.style.display = 'none'
+  }
 }
 
 // %%%%%%%% FORMAT RADIO ANSWERS %%%%%%%%%%%%%%
@@ -75,9 +103,9 @@ function renderRadio(id, answer) {
 
   let newline = document.createElement("br");
 
-  questionContainer.appendChild(radiobox);
-  questionContainer.appendChild(label);
-  questionContainer.appendChild(newline);
+  quizContainer.appendChild(radiobox);
+  quizContainer.appendChild(label);
+  quizContainer.appendChild(newline);
 }
 
 // %%%%%%%%%%% DISPLAY QUESTION & ANSWERS %%%%%%%%
@@ -91,7 +119,7 @@ function addNewQuestion(id, questionData) {
   const newQuestionTitle = document.createElement("P");
   newQuestionTitle.classList.add("question");
   newQuestionTitle.innerHTML = `Q${id + 1}. ${questionData.question}`;
-  questionContainer.append(newQuestionTitle);
+  quizContainer.append(newQuestionTitle);
   let A = questionData.correct_answer;
   let B = questionData.incorrect_answers[0];
   let C = questionData.incorrect_answers[1];
@@ -130,13 +158,14 @@ function addQuestion() {
       const quizEnd1 = document.createElement("P");
       quizEnd1.style.textAlign = 'center';
       quizEnd1.innerHTML = "<b>This is the end of the quiz.</b>";
-      questionContainer.append(quizEnd1);
+      quizContainer.append(quizEnd1);
       const quizEnd2 = document.createElement("P");
       quizEnd2.style.textAlign = 'center';
-      quizEnd2.innerHTML = "<b>Click SCORE to see how well you;ve done.</b>";
-      questionContainer.append(quizEnd2);
+      quizEnd2.innerHTML = "<b>Click SCORE to see how well you've done.</b>";
+      quizContainer.append(quizEnd2);
       showScore.disabled = false;
-      nextQuestion.disabled = true;
+      newQuestion.disabled = true;
+      token.disabled = true;
     }
   } catch (error) {
     console.error('No answer has been selected');
@@ -175,12 +204,12 @@ function recordAnswer() {
 // %%%%%%%%%%%%%%%%% RESET & REMOVE DISPLAYED QUESTIONS %%%%%%%%%%%%%%%%%%%%%
 
 function removeItem() {
-  while (questionContainer.firstChild) {
-    questionContainer.removeChild(questionContainer.firstChild);
+  while (quizContainer.firstChild) {
+    quizContainer.removeChild(quizContainer.firstChild);
   }
 }
 
-//  function for the RESET button
+//  function for the RESET and RESTART button
 
 function resetQuiz() {
   removeItem();
@@ -189,12 +218,14 @@ function resetQuiz() {
   questions = [];
   score = 0;
   newQuiz.disabled = false;
-  renew.disabled = true;
-  nextQuestion.disabled = true;
+  reset.disabled = true;
+  newQuestion.disabled = true;
   showScore.disabled = true;
+  token.disabled = false;
   settingsDiv.style.display = 'flex'
   console.clear();
 }
+
 
 // %%%%%%%%%%% DISPLAY SCORE AND CORRECT & SELECTED ANSWERS %%%%%%%%
 
@@ -205,18 +236,18 @@ function addAnswer(id, data) {
   correctAnswer.classList.add("green");
   const selectedAnswer = document.createElement("P");
   selectedAnswer.classList.add("red");
-  question.innerHTML = `Q${id+1}. ${data[id].question}`;
+  question.innerHTML = `Q${id + 1}. ${data[id].question}`;
   correctAnswer.innerHTML = `A: ${data[id].correct}`;
   selectedAnswer.innerHTML = `A: ${data[id].selected}`;
   let corAns = data[id].correct;
   let selAns = data[id].selected;
   if (selAns === corAns) {
-    questionContainer.append(question);
-    questionContainer.append(correctAnswer);
+    quizContainer.append(question);
+    quizContainer.append(correctAnswer);
   } else {
-    questionContainer.append(question);
-    questionContainer.append(correctAnswer);
-    questionContainer.append(selectedAnswer);
+    quizContainer.append(question);
+    quizContainer.append(correctAnswer);
+    quizContainer.append(selectedAnswer);
   }
 }
 
@@ -229,8 +260,8 @@ function displayScore() {
     if (id < questions.length) {
       const quizScore = document.createElement("P");
       quizScore.style.fontSize = '28';
-      quizScore.innerHTML = `<b>Your score is <span class="red">${score}</span> out of ${id-1}</b>`;
-      questionContainer.append(quizScore);
+      quizScore.innerHTML = `<b>Your score is <span class="red">${score}</span> out of ${id - 1}</b>`;
+      quizContainer.append(quizScore);
       for (let i = 0; i <= questions.length; i++) {
         addAnswer(i, answers);
       }
@@ -238,7 +269,7 @@ function displayScore() {
       const quizScore = document.createElement("P");
       quizScore.style.fontSize = '28';
       quizScore.innerHTML = `<b>Your score is <span class="red">${score}</span> out of ${id}</b>`;
-      questionContainer.append(quizScore);
+      quizContainer.append(quizScore);
       for (let i = 0; i <= questions.length; i++) {
         addAnswer(i, answers);
       }
@@ -248,8 +279,8 @@ function displayScore() {
   }
 }
 
-
 newQuiz.addEventListener("click", saveQuestions);
-nextQuestion.addEventListener("click", addQuestion);
-renew.addEventListener("click", resetQuiz);
+newQuestion.addEventListener("click", addQuestion);
+reset.addEventListener("click", resetQuiz);
 showScore.addEventListener("click", displayScore);
+token.addEventListener("click", generateToken);

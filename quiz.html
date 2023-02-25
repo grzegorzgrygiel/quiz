@@ -25,6 +25,7 @@
                     <option value="50">50</option>
                 </select>
             </div>
+            <br>
             <div class="setting-wrapper">
                 <label class="setting" for="topic">Select topic:</label>
                 <select name="topic" class="selects" id="topic">
@@ -35,6 +36,7 @@
                     <option value="28">Vehicles</option>
                 </select>
             </div>
+            <br>
             <div class="setting-wrapper">
                 <label class="setting" for="level">Select level:</label>
                 <select name="level" class="selects" id="level">
@@ -44,6 +46,7 @@
                     <option value="hard">Hard</option>
                 </select>
             </div>
+            <br>
             <div class="setting-wrapper">
                 <label class="setting" for="level">Select type:</label>
                 <select name="type" class="selects" id="type">
@@ -56,11 +59,14 @@
         <div id="buttons">
             <button id="newQuiz" class="btns">Start quiz</button>
             <button id="newQuestion" class="btns">Next</button>
-            <button id="renew" class="btns">Reset</button>
+            <button id="reset" class="btns">Reset</button>
             <button id="score" class="btns">Score</button>
+            <button id="token" class="btns">Token</button>
+
         </div>
-        <div id=quizContainer></div>
-        <p id="info">Your selected answer is recorded after you press NEXT.</p>
+        <div id="quizContainer"></div>
+        <p id="codeMSG">If you want to get different questions in each quiz, press TOKEN</p>
+        <p id="info"></p>
     </div>
 
     <script src="app.js"></script>
