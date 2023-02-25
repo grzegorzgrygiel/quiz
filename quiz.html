@@ -10,55 +10,58 @@
 </head>
 
 <body>
-    <h1>Start your Quiz!</h1>
 
-    <div><label for="number">How many questions?:</label>
-        <select id="number" name="number">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-            <option value="40">40</option>
-            <option value="50">50</option>
-        </select>
+    <div id="wrapper">
+        <h1>Take A Quiz!</h1>
+
+        <div id="settings">
+            <div class="setting-wrapper">
+                <label class="setting" for="number">How many questions?:</label>
+                <select id="number" class="selects" name="number">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div class="setting-wrapper">
+                <label class="setting" for="topic">Select topic:</label>
+                <select name="topic" class="selects" id="topic">
+                    <option value="9">General knowledge</option>
+                    <option value="17">Science&Nature</option>
+                    <option value="18">Science: computers</option>
+                    <option value="22">Geography</option>
+                    <option value="28">Vehicles</option>
+                </select>
+            </div>
+            <div class="setting-wrapper">
+                <label class="setting" for="level">Select level:</label>
+                <select name="level" class="selects" id="level">
+                    <option value="">Any difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div class="setting-wrapper">
+                <label class="setting" for="level">Select type:</label>
+                <select name="type" class="selects" id="type">
+                    <option value="">Any type</option>
+                    <option value="multiple">Multiple Choice</option>
+                    <option value="boolean">True / False</option>
+                </select>
+            </div>
+        </div>
+        <div id="buttons">
+            <button id="newQuiz" class="btns">Start quiz</button>
+            <button id="newQuestion" class="btns">Next</button>
+            <button id="renew" class="btns">Reset</button>
+            <button id="score" class="btns">Score</button>
+        </div>
+        <div id=quizContainer></div>
+        <p id="info">Your selected answer is recorded after you press NEXT.</p>
     </div>
-    <br>
-    <div>
-        <label for="topic">Select topic:</label>
-        <select name="topic" id="topic">
-            <option value="9">General knowledge</option>
-            <option value="17">Science&Nature</option>
-            <option value="18">Science: computers</option>
-            <option value="22">Geography</option>
-            <option value="28">Vehicles</option>
-        </select>
-    </div>
-    <br>
-    <div>
-        <label for="level">Select level:</label>
-        <select name="level" id="level">
-            <option value="">Any difficulty</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
-    </div>
-    <br>
-    <div>
-        <label for="level">Select type:</label>
-        <select name="type" id="type">
-            <option value="">Any type</option>
-            <option value="multiple">Multiple Choice</option>
-            <option value="boolean">True / False</option>
-        </select>
-    </div>
-    <br>
-    <button id="newQuiz">Start quiz</button>
-    <br><br>
-    <button id="renew">Cancel</button>
-    <br><br>
-    <button id="newQuestion">Next</button>
-    <br>
-    <div id=quizContainer></div>
 
     <script src="app.js"></script>
 
