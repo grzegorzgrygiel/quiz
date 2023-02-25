@@ -73,7 +73,7 @@ async function saveQuestions() {
   } else if (data.response_code === 4) {
     console.log("Session Token has returned all possible questions for the specified query.");
     codeMSG.style.display = 'inline';
-    codeMSG.innerHTML = '<span class="red">There are no more questions for these settings!</span>';
+    codeMSG.innerHTML = '<span class="red">There aren\'t enough questions for these settings!</span>';
   } else if (data.response_code === 0) {
     codeMSG.style.display = 'none';
     addNewQuestion(id, questions[id]);
